@@ -166,7 +166,6 @@ def train(args, snapshot_path):
                 'kappa': kappa
             }
             """
-            # model.eval()
 
             metrics_sum = [0.0 for _ in range(6)]
             for step, batch in enumerate(test_loader):
