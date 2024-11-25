@@ -1,7 +1,7 @@
 # encoding: utf-8
 # @Time    : 2024/6/16 下午6:41
 # @Author  : Geng Qin
-# @File    : train_seg.py
+# @File    : train_cls.py
 import os
 import numpy as np
 import torch
@@ -178,53 +178,6 @@ def train(args, snapshot_path):
                    metrics_avg[2], metrics_avg[3], metrics_avg[4]))
 
             model.train()
-            # model.eval()
-            # model_l_savedir = os.path.join(args.snapshot_dir, f'model_{args.model}_fold{args.fold}', )
-            # if not os.path.exists(model_l_savedir):
-            #     os.makedirs(model_l_savedir)
-            # torch.save(model.state_dict(), os.path.join(model_l_savedir, f'fold{args.fold}_epoch{epoch}_{args.model}.pth'))
-            # model.train()
-            #
-            # """
-            # Args:
-            #         model test dataloader
-            # :return
-            #         metrics:
-            #         {
-            #     'accuracy': accuracy,
-            #     'AUC': average_accuracy,
-            #     'f1': f1,
-            #     'precision': precision,
-            #     'recall': recall
-            #     'kappa': kappa
-            # }
-            # """
-            # model.eval()
-            # metrics_sum = [0.0 for _ in range(5)]
-            # for step, batch in enumerate(test_loader):
-            #     images, labels = batch
-            #     images = images.to(device)
-            #     labels = labels.long().to(device)
-            #
-            #     with torch.no_grad():
-            #         outs = model(images)
-            #
-            #     # output = outs.max(1)[1].cpu().numpy()
-            #     output = outs.cpu().numpy()
-            #     label = labels.cpu().numpy()
-            #     dict = calculate_classification_metrics(output, label)
-            #     """=============calculate metrics=============="""
-            #     metrics_sum = [sum_val + dict[metric] for sum_val, metric in zip(metrics_sum,
-            #                                                                      ['accuracy',
-            #                                                                       'f1-score', 'precision',
-            #                                                                       'recall', 'kappa'])]
-            #
-            # metrics_avg = [sum_val / len(test_loader) for sum_val in metrics_sum]
-            # logging.info(
-            #     'Epoch: %03d/%03d || model1---Overall Accuracy: %.4f '
-            #     'F1-score: %.4f Precision: %.4f Recall: %.4f Kappa: %.4f'
-            #     % (epoch + 1, args.nepochs, metrics_avg[0], metrics_avg[1],
-            #        metrics_avg[2], metrics_avg[3], metrics_avg[4]))
     logger.close()
     print('all done')
 
