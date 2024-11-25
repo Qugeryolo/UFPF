@@ -16,8 +16,8 @@ from cls_model.STViT import STViT
 from cls_model.Swin_transformer import swin_base_patch4_window7_224
 from cls_model.UniFormer import uniformer_base
 from cls_model.ViT import vit_base_patch16_224_in21k
-from cls_model.WiKG import WiKG
-from cls_model.v1 import *
+# from cls_model.WiKG import WiKG
+# from cls_model.v1 import *
 
 
 def get_network(network, num_classes, **kwargs):
@@ -74,11 +74,11 @@ def get_network(network, num_classes, **kwargs):
         net = uniformer_base()
     elif network == "vit":
         net = vit_base_patch16_224_in21k(num_classes=num_classes)
-    elif network == 'wikg':
-        net = WiKG(dim_in=384, dim_hidden=512, topk=6, n_classes=num_classes, agg_type='bi-interaction', dropout=0.3,
-                 pool='attn')
-    elif network == 'v1':
-        net = MambaVisionTransformer(config=CONFIGS['R50-ViT-B_16'], img_size=256, num_classes=num_classes)
+    # elif network == 'wikg':
+    #     net = WiKG(dim_in=384, dim_hidden=512, topk=6, n_classes=num_classes, agg_type='bi-interaction', dropout=0.3,
+    #              pool='attn')
+    # elif network == 'v1':
+    #     net = MambaVisionTransformer(config=CONFIGS['R50-ViT-B_16'], img_size=256, num_classes=num_classes)
 
     else:
         print('the network you have entered is not supported yet')
