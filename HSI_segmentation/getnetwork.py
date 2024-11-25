@@ -3,13 +3,11 @@
 # @Author  : Geng Qin
 # @File    : get_networks.py
 import sys
-# from model.Dinov2 import *
-from model.transunet import *
 from model.H_vmunet import *
 from model.segformer import *
 from model.FDnet import *
-from model.ssm_tran import *
-from model.v1 import *
+# from model.ssm_tran import *
+# from model.v1 import *
 from model.EMCAD import EMCADNet
 from model.swin_unet import swinunet
 from model.unet import UNet
@@ -25,8 +23,6 @@ def get_network(network, num_classes, **kwargs):
     # 2d networks
     if network == 'unet':
         net = UNet(n_channels=60, n_classes=num_classes)
-    elif network == 'transunet':
-        net = VisionTransformer(config=CONFIGS['R50-ViT-B_16'], img_size=256, num_classes=2)
     elif network == 'H-vmunet':
         net = H_vmunet(num_classes=num_classes,
                      input_channels=60,
@@ -52,8 +48,8 @@ def get_network(network, num_classes, **kwargs):
     #     net = BEFUnet()
     elif network == "MADGNet":
         net = MFMSNet()
-    elif network == 'v1':
-        net = MambaVisionTransformer(config=CONFIGS['R50-ViT-B_16'], img_size=256, num_classes=2)
+    # elif network == 'v1':
+    #     net = MambaVisionTransformer(config=CONFIGS['R50-ViT-B_16'], img_size=256, num_classes=2)
 
     else:
         print('the network you have entered is not supported yet')
