@@ -12,29 +12,7 @@ from torch.autograd import Variable
 
 def mse_loss(input1, input2):
     return torch.mean((input1 - input2)**2)
-
-
-def dice_loss(score, target):
-    target = target.float()
-    smooth = 1e-5
-    intersect = torch.sum(score * target)
-    y_sum = torch.sum(target * target)
-    z_sum = torch.sum(score * score)
-    loss = (2 * intersect + smooth) / (z_sum + y_sum + smooth)
-    loss = 1 - loss
-    return loss
-
-
-def dice_loss1(score, target):
-    target = target.float()
-    smooth = 1e-5
-    intersect = torch.sum(score * target)
-    y_sum = torch.sum(target)
-    z_sum = torch.sum(score)
-    loss = (2 * intersect + smooth) / (z_sum + y_sum + smooth)
-    loss = 1 - loss
-    return loss
-
+    
 
 def entropy_loss(p, C=2):
     # p N*C*W*H*D
@@ -43,26 +21,6 @@ def entropy_loss(p, C=2):
     ent = torch.mean(y1)
 
     return ent
-
-
-def softmax_dice_loss(input_logits, target_logits):
-    """Takes softmax on both sides and returns MSE loss
-
-    Note:
-    - Returns the sum over all examples. Divide by the batch size afterwards
-      if you want the mean.
-    - Sends gradients to inputs but not the targets.
-    """
-    assert input_logits.size() == target_logits.size()
-    input_softmax = F.softmax(input_logits, dim=1)
-    target_softmax = F.softmax(target_logits, dim=1)
-    n = input_logits.shape[1]
-    dice = 0
-    for i in range(0, n):
-        dice += dice_loss1(input_softmax[:, i], target_softmax[:, i])
-    mean_dice = dice / n
-
-    return mean_dice
 
 
 def entropy_loss_map(p, C=2):
