@@ -1,7 +1,7 @@
 # encoding: utf-8
 # @Time    : 2024/3/16 下午6:41
 # @Author  : Geng Qin
-# @File    : train_seg.py
+# @File    : train_seg_oscc.py
 import os
 import numpy as np
 import torch
