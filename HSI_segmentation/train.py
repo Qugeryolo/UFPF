@@ -15,6 +15,7 @@ from torch.nn.modules.loss import CrossEntropyLoss
 import torch.optim as optim
 from tensorboardX import SummaryWriter
 from dataset.OSCC_dataset import HSISegmentation, get_train_loader
+# from dataset.DGA_dataset import HSISegmentation, get_train_loader
 from getnetwork import get_network
 from losses.loss import *
 from utils.lr_policy import WarmUpPolyLR
