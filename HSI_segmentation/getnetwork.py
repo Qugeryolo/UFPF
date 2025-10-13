@@ -6,8 +6,7 @@ import sys
 from model.H_vmunet import *
 from model.segformer import *
 from model.FDnet import *
-# from model.ssm_tran import *
-# from model.v1 import *
+from model.UFPF import *
 from model.EMCAD import EMCADNet
 from model.swin_unet import swinunet
 from model.unet import UNet
@@ -15,7 +14,7 @@ from model.wavesnet import *
 from model.nnunet import *
 from model.resunet import *
 from model.MADGNet import MFMSNet
-# from model.BEFUnet import *
+
 
 
 def get_network(network, num_classes, **kwargs):
@@ -48,8 +47,8 @@ def get_network(network, num_classes, **kwargs):
     #     net = BEFUnet()
     elif network == "MADGNet":
         net = MFMSNet()
-    # elif network == 'v1':
-    #     net = MambaVisionTransformer(config=CONFIGS['R50-ViT-B_16'], img_size=256, num_classes=2)
+    elif network == 'UFPF':
+        net = MambaVisionTransformer(config=CONFIGS['R50-ViT-B_16'], img_size=256, num_classes=2)
 
     else:
         print('the network you have entered is not supported yet')
