@@ -1,4 +1,4 @@
- <h2>🕹️ UFPF: A Universal Feature Perception Framework for Microscopic Hyperspectral Medical Images </h2>
+ <h2>🕹️ [TIP'25] UFPF: A Universal Feature Perception Framework for Microscopic Hyperspectral Medical Images </h2>
 
 
 ## 💫 Abstract :
