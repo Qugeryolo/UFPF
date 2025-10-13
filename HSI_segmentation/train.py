@@ -74,7 +74,7 @@ test_dataset = HSISegmentation(root=args.root_path, txt_name='fold4_test.txt', t
 
 train_loader = get_train_loader(train_dataset, batch_size=args.batch_size, num_workers=0)
 
-test_loader = get_train_loader(test_dataset, batch_size=args.batch_size, num_workers=0)
+test_loader = get_train_loader(test_dataset, batch_size=args.batch_size, num_workers=0) 
 
 
 def kaiming_normal_init_weight(model):
@@ -158,68 +158,46 @@ def train(args, snapshot_path):
                sum_loss_dice / len(train_loader),
                sum_loss_ce / len(train_loader)))
 
-        if (epoch % 5 == 0) and (epoch >= 130) or (epoch == args.nepochs - 1):
-            model.eval()
-            model_l_savedir = os.path.join(args.snapshot_dir, f'model_{args.model}_fold{args.fold}', )
-            if not os.path.exists(model_l_savedir):
-                os.makedirs(model_l_savedir)
-            torch.save(model.state_dict(), os.path.join(model_l_savedir, f'fold{args.fold}_epoch{epoch}_{args.model}.pth'))
-            model.train()
-
-            """
-            Args:
-                    model test dataloader 
-            :return
-                    metrics: 
-                    {
-                'TPR': tpr,
-                'TNR': tnr,
-                'DICE': Dsc,
-                'IOU': Jaccard,
-                'ACC': acc,
-                'Precision': Prec,
-                'HD': hous_dis,
-                'HD95': hous_dis95,
-                'Recall': Recall,
-                'sen': sen,
-                'asd': asd
-            }
-            """
-
-            metrics_sum = [0.0 for _ in range(9)]
-            model.eval()
-            for step, batch in enumerate(test_loader):
-                images, labels = batch
-                images = images.to(device)
-                labels = labels.long().to(device)
-
-                with torch.no_grad():
-                    outs = model(images)
-                output = F.interpolate(
-                    outs, labels.shape[1:], mode="bilinear", align_corners=True
-                )
-                output = output.max(1)[1].cpu().numpy()
-                label = labels.cpu().numpy()
-                dict = calculate_metrics_compose(output, label)
-                """=============calculate metrics=============="""
-
-                metrics_sum = [sum_val + dict[metric] for sum_val, metric in zip(metrics_sum,
-                                                                                 ['DICE', 'IOU', 'ACC',
-                                                                                  'Precision', 'HD', 'HD95',
-                                                                                  'Recall', 'sen', 'asd'])]
-
-            metrics_avg = [sum_val / len(test_loader) for sum_val in metrics_sum]
-
-            logging.info(
-                'Epoch: %03d/%03d || model1---DSC: %.4f IoU: %.4f '
-                'ACC: %.4f Pre: %.4f HD: %.4f HD95: %.4f  Recall: %.4f Sen: %.4f ASD: %.4f'
-                % (epoch + 1, args.nepochs, metrics_avg[0], metrics_avg[1],
-                   metrics_avg[2], metrics_avg[3], metrics_avg[4], metrics_avg[5], metrics_avg[6], metrics_avg[7], metrics_avg[8]))
-            model.train()
+        if (epoch % 5 == 0 and epoch >= 60) or (epoch == cfg['nepochs'] - 1):
+            evaluate_and_save_model(model, epoch, test_loader, cfg['nepochs'])
 
     logger.close()
     print('all done')
 
+def evaluate_and_save_model(model, epoch, test_loader, nepochs):
+    model.eval()
+    save_dir = os.path.join(cfg['snapshot_dir'], f"model_{cfg['model_name']}_fold{cfg['fold']}")
+    os.makedirs(save_dir, exist_ok=True)
+    save_path = os.path.join(save_dir, f"fold{cfg['fold']}_epoch{epoch}_{cfg['model_name']}.pth")
+    torch.save(model.state_dict(), save_path)
+
+    all_outputs = []
+    all_labels = []
+
+    with torch.no_grad():
+        for batch in test_loader:
+            images, labels = batch
+            images = images.to(device)
+            labels = labels.long().to(device)
+
+            outs = model(images)
+            output = F.interpolate(outs, labels.shape[1:], mode="bilinear", align_corners=True)
+            output = output.max(1)[1].cpu().numpy()
+            label = labels.cpu().numpy()
+
+            all_outputs.extend(output)
+            all_labels.extend(label)
+
+    all_outputs = np.array(all_outputs)
+    all_labels = np.array(all_labels)
+    metrics = calculate_metrics_compose(all_outputs, all_labels)
+
+    logging.info(f'Epoch: {epoch+1:03d}/{nepochs:03d} || DSC: {metrics["DICE"]:.4f} IOU: {metrics["IOU"]:.4f} '
+                 f'HD: {metrics["HD"]:.4f} HD95: {metrics["HD95"]:.4f} '
+                 f'ACC: {metrics["ACC"]:.4f} PRE: {metrics["PRE"]:.4f} '
+                 f'REC: {metrics["REC"]:.4f} ASD: {metrics["ASD"]:.4f}')
+
+    model.train()
 
 if __name__ == "__main__":
 
