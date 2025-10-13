@@ -27,21 +27,6 @@ def segmentation_accuracy(y_pred, y_true):
 
 
 def calculate_metrics_compose(prediction, ground_truth):
-    """
-    args:
-    Dice相似系数(Dice Similarity Coefficient DSC)或
-    Dice系数(Dice Coefficient DC)
-    用于有效衡量分割算法预测标签与真实标注标签的空间重叠程度，
-    其对应值越大表示分割精度越高。
-
-    Jaccard相似系数(Jaccard Similarity Coefficient JSC)或
-    Jaccard系数(Jaccard Coefficient JC)与 Dice 相似系数指标相似，
-    也是一种衡量两幅图像相似程度的指标，
-    其由实际分割结果与真实标签的交集同二者并集的比值得出(IOU)
-
-    HD95: 计算两个图像中二值对象之间的（对称）豪斯多夫距离 HD 的第95个百分位数。
-    与豪斯多夫距离相比，该指标对于小异常值稍微稳定一些，通常用于生物医学分割挑战
-    """
 
     Dsc = metric.binary.dc(prediction, ground_truth)
     Jaccard = metric.binary.jc(prediction, ground_truth)
