@@ -79,17 +79,10 @@ if __name__ == "__main__":
     array3.append(array2)
     print(np.array(array3).shape)
     # arr = np.zeros((8, 256, 256), dtype=np.int8)
-    # # 将数组中的所有元素随机设置为0或1
     # arr = np.random.randint(2, size=arr.shape, dtype=np.int8)
     label = np.zeros((8, 256, 256), dtype=np.int8)
-    # 将数组中的所有元素随机设置为0或1
     label = np.random.randint(3, size=label.shape, dtype=np.int8)
     target = np.random.rand(2, 256, 256)
 
     dice = calculate_metrics_compose(array1, label)
-    # dict = {}
-    # dict['dsc'] = dsc
-    # dict['iou'] = iou
-    # dict['hd'] = hd
-    # dict['hd95'] = hd95
     print(dict)
